@@ -512,13 +512,13 @@
 
     // make sure "No" starts inside arena coords (absolute within arena)
     function initNoPos() {
+      noBtn.textContent = "No 🙈"; // Reset to default
       noBtn.style.transform = "translate(0,0)";
       noBtn.style.left = "60%";
       noBtn.style.top = "65%";
-      // convert percent to px next move
-      requestAnimationFrame(moveNoButton);
     }
     initNoPos();
+    // Do not call requestAnimationFrame(moveNoButton) here to avoid immediate jump/text change
 
     function pointerNearNo(e) {
       if (noBtn.style.display === 'none') return false;
