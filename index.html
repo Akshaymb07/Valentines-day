@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Will you be my Valentine?</title>
+  <meta name="theme-color" content="#ff4d6d" />
+  <style>
+    :root{
+      --bg1:#ff4d6d;
+      --bg2:#7c3aed;
+      --glass: rgba(255,255,255,.14);
+      --glass2: rgba(255,255,255,.08);
+      --border: rgba(255,255,255,.20);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.75);
+      --shadow: 0 20px 70px rgba(0,0,0,.25);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      overflow:hidden;
+      background:
+        radial-gradient(1200px 700px at 20% 10%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(900px 600px at 90% 20%, rgba(255,255,255,.14), transparent 55%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+    }
+    .hearts{
+      position:fixed; inset:0; pointer-events:none; opacity:.32;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,.16) 0 2px, transparent 3px),
+        radial-gradient(circle at 70% 60%, rgba(255,255,255,.10) 0 2px, transparent 3px),
+        radial-gradient(circle at 30% 80%, rgba(255,255,255,.12) 0 2px, transparent 3px);
+      filter: blur(.2px);
+      animation: floatbg 8s ease-in-out infinite alternate;
+    }
+    @keyframes floatbg{
+      from{transform:translate3d(0,0,0) scale(1)}
+      to{transform:translate3d(-10px, 10px,0) scale(1.03)}
+    }
+
+    .wrap{
+      height:100%;
+      display:grid;
+      place-items:center;
+      padding:24px;
+    }
+    .card{
+      width:min(720px, 94vw);
+      border-radius:26px;
+      padding:28px 26px 20px;
+      background: linear-gradient(180deg, var(--glass), var(--glass2));
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      position:relative;
+    }
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
+    }
+    .badge{
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--muted);
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.06);
+      user-select:none;
+    }
+    .spark{
+      display:flex; gap:8px; align-items:center;
+      color:rgba(255,255,255,.9);
+      user-select:none;
+    }
+    .spark .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: rgba(255,255,255,.9);
+      box-shadow:0 0 0 6px rgba(255,255,255,.12);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{transform:scale(1); opacity:.75}
+      50%{transform:scale(1.15); opacity:1}
+    }
+
+    h1{
+      margin:6px 0 8px;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height:1.05;
+    }
+    p{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size: clamp(14px, 2vw, 16px);
+      line-height:1.5;
+    }
+
+    .arena{
+      margin-top:14px;
+      position:relative;
+      height: clamp(210px, 34vh, 280px);
+      border-radius:20px;
+      border: 1px dashed rgba(255,255,255,.24);
+      background: rgba(255,255,255,.05);
+      overflow:hidden;
+    }
+    .center{
+      position:absolute; inset:0;
+      display:grid; place-items:center;
+      padding:18px;
+      text-align:center;
+    }
+
+    .btns{
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+    button{
+      appearance:none;
+      border:none;
+      padding:14px 18px;
+      border-radius:14px;
+      font-weight:700;
+      font-size:16px;
+      cursor:pointer;
+      transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button:active{transform: scale(.98)}
+    .yes{
+      background: rgba(255,255,255,.92);
+      color:#2b1038;
+      box-shadow: 0 16px 30px rgba(0,0,0,.22);
+    }
+    .yes:hover{filter:brightness(1.03)}
+    .no{
+      background: rgba(255,255,255,.10);
+      color: rgba(255,255,255,.90);
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow: 0 10px 22px rgba(0,0,0,.12);
+      position:absolute; /* we move it inside arena */
+      left: calc(50% + 90px);
+      top: calc(50% + 40px);
+      transform: translate(-50%,-50%);
+      touch-action:none;
+    }
+    .no:hover{filter:brightness(1.08)}
+
+    .fineprint{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      margin-top:14px;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.82);
+      font-size:14px;
+    }
+    .fineprint input{
+      margin-top:2px;
+      width:18px; height:18px;
+      accent-color: white;
+    }
+
+    .success{
+      position:absolute; inset:0;
+      display:grid; place-items:center;
+      padding:18px;
+      text-align:center;
+      opacity:0; pointer-events:none;
+      transform: scale(.98);
+      transition: opacity .25s ease, transform .25s ease;
+      background: radial-gradient(700px 300px at 50% 20%, rgba(255,255,255,.14), transparent 60%);
+    }
+    .success.show{
+      opacity:1; pointer-events:auto;
+      transform: scale(1);
+    }
+    .success h2{
+      margin:0 0 8px;
+      font-size: clamp(26px, 3.2vw, 36px);
+    }
+    .success .msg{
+      margin:0 auto 18px;
+      max-width:52ch;
+      color: rgba(255,255,255,.85);
+    }
+    .chiprow{
+      display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .chip{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.88);
+      font-weight:600;
+      font-size:13px;
+    }
+
+    footer{
+      margin-top:14px;
+      text-align:center;
+      color: rgba(255,255,255,.78);
+      font-size:13px;
+      user-select:none;
+    }
+
+    canvas#confetti{
+      position:fixed; inset:0;
+      pointer-events:none;
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts"></div>
+  <canvas id="confetti"></canvas>
+
+  <div class="wrap">
+    <div class="card" role="application" aria-label="Valentine app">
+      <div class="top">
+        <div class="badge">Valentine Mode</div>
+        <div class="spark"><span class="dot"></span><span>tap the buttons ✨</span></div>
+      </div>
+
+      <h1>Will you be my Valentine? 💘</h1>
+      <p>A tiny question with a huge smile attached. Choose wisely. (Or don’t… I may have rigged it.)</p>
+
+      <div class="arena" id="arena" aria-label="Button arena">
+        <div class="center" id="prompt">
+          <div>
+            <div class="btns" style="position:relative">
+              <button class="yes" id="yesBtn">Yes 😍</button>
+            </div>
+
+            <!-- Optional fine print -->
+            <label class="fineprint" id="fineprint">
+              <input type="checkbox" id="agree"/>
+              <span>
+                <strong>Fine print:</strong> I accept cute dates, extra hugs, and at least one silly joke.
+              </span>
+            </label>
+
+            <div style="margin-top:12px; color: rgba(255,255,255,.70); font-size: 13px;">
+              (P.S. the “No” button is somewhere in this box. If you can catch it.)
+            </div>
+          </div>
+        </div>
+
+        <button class="no" id="noBtn" aria-label="No button">No 🙈</button>
+
+        <div class="success" id="success" aria-live="polite">
+          <div>
+            <h2>YAYYY! 💖</h2>
+            <p class="msg" id="successMsg">
+              You just made my whole day. Now we officially have plans. 😊
+            </p>
+            <div class="chiprow">
+              <span class="chip">Date idea: coffee + walk</span>
+              <span class="chip">Dessert: mandatory</span>
+              <span class="chip">Vibe: ✨ immaculate ✨</span>
+            </div>
+            <div style="margin-top:18px">
+              <button class="yes" id="resetBtn" style="background: rgba(255,255,255,.12); color: rgba(255,255,255,.92); border:1px solid rgba(255,255,255,.22); box-shadow:none;">
+                Play again ↻
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>Made with Love by Akshay ❤️</footer>
+    </div>
+  </div>
+
+  <script>
+    // --- Tiny confetti (no libraries) ---
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+    function resize(){
+      W = canvas.width = window.innerWidth * devicePixelRatio;
+      H = canvas.height = window.innerHeight * devicePixelRatio;
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+    }
+    // Fix scaling on resize by resetting transform
+    function hardResize(){
+      canvas.width = window.innerWidth * devicePixelRatio;
+      canvas.height = window.innerHeight * devicePixelRatio;
+      ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    }
+    hardResize();
+    window.addEventListener('resize', hardResize);
+
+    function confettiBurst(count=160){
+      const parts = [];
+      for(let i=0;i<count;i++){
+        parts.push({
+          x: Math.random()*window.innerWidth,
+          y: -20 - Math.random()*200,
+          r: 2 + Math.random()*4,
+          vx: -2 + Math.random()*4,
+          vy: 2 + Math.random()*6,
+          rot: Math.random()*Math.PI,
+          vr: -0.2 + Math.random()*0.4,
+          life: 140 + Math.random()*60,
+          kind: Math.random() > 0.8 ? 'heart' : 'rect'
+        });
+      }
+      let frame = 0;
+      (function tick(){
+        frame++;
+        ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+        parts.forEach(p=>{
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.02;
+          p.rot += p.vr;
+          p.life -= 1;
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.globalAlpha = Math.max(0, Math.min(1, p.life/180));
+
+          // Random pastel-ish colors
+          const hue = (330 + Math.random()*60) % 360;
+          ctx.fillStyle = `hsla(${hue}, 90%, 70%, ${ctx.globalAlpha})`;
+
+          if(p.kind === 'heart'){
+            // draw a tiny heart
+            ctx.beginPath();
+            ctx.moveTo(0, p.r);
+            ctx.bezierCurveTo(p.r, -p.r, p.r*2, p.r, 0, p.r*2);
+            ctx.bezierCurveTo(-p.r*2, p.r, -p.r, -p.r, 0, p.r);
+            ctx.fill();
+          } else {
+            ctx.fillRect(-p.r, -p.r, p.r*2, p.r*2);
+          }
+
+          ctx.restore();
+        });
+
+        // Remove dead parts
+        for(let i=parts.length-1;i>=0;i--){
+          if(parts[i].life <= 0 || parts[i].y > window.innerHeight + 60){
+            parts.splice(i,1);
+          }
+        }
+        if(parts.length > 0 && frame < 260) requestAnimationFrame(tick);
+        else ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+      })();
+    }
+
+    // --- Rigged "No" button movement ---
+    const arena = document.getElementById('arena');
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const success = document.getElementById('success');
+    const resetBtn = document.getElementById('resetBtn');
+    const agree = document.getElementById('agree');
+    const successMsg = document.getElementById('successMsg');
+
+    const noPhrases = ["No 🙈","Wait…","U sure?","Try again","Nice try","Not today","😅","oops"];
+    let dodgeLevel = 1;
+
+    function clamp(v,min,max){ return Math.min(max, Math.max(min,v)); }
+
+    function moveNoButton(){
+      const rect = arena.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      // Keep within arena with padding
+      const pad = 14;
+      const maxX = rect.width - btnRect.width - pad;
+      const maxY = rect.height - btnRect.height - pad;
+
+      const x = pad + Math.random() * clamp(maxX - pad, 30, maxX);
+      const y = pad + Math.random() * clamp(maxY - pad, 30, maxY);
+
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top  = `${y}px`;
+
+      // sometimes shrink a little (but not too much)
+      if(Math.random() > 0.6){
+        const s = 0.88 + Math.random()*0.12;
+        noBtn.style.transform = `translate(0,0) scale(${s})`;
+      } else {
+        noBtn.style.transform = `translate(0,0)`;
+      }
+
+      // change label
+      noBtn.textContent = noPhrases[Math.floor(Math.random()*noPhrases.length)];
+    }
+
+    // make sure "No" starts inside arena coords (absolute within arena)
+    function initNoPos(){
+      noBtn.style.transform = "translate(0,0)";
+      noBtn.style.left = "60%";
+      noBtn.style.top = "65%";
+      // convert percent to px next move
+      requestAnimationFrame(moveNoButton);
+    }
+    initNoPos();
+
+    function pointerNearNo(e){
+      const p = (e.touches && e.touches[0]) ? e.touches[0] : e;
+      const r = noBtn.getBoundingClientRect();
+      const dx = (p.clientX - (r.left + r.width/2));
+      const dy = (p.clientY - (r.top + r.height/2));
+      const dist = Math.hypot(dx,dy);
+      return dist < (90 - dodgeLevel*8); // gets harder to hit over time
+    }
+
+    // Desktop: dodge on hover/move
+    arena.addEventListener('mousemove', (e)=>{
+      if(pointerNearNo(e)) {
+        dodgeLevel = clamp(dodgeLevel + 0.08, 1, 6);
+        moveNoButton();
+      }
+    });
+
+    // Mobile: dodge on touchstart near it
+    arena.addEventListener('touchstart', (e)=>{
+      if(pointerNearNo(e)) {
+        dodgeLevel = clamp(dodgeLevel + 0.2, 1, 6);
+        moveNoButton();
+      }
+    }, {passive:true});
+
+    // If they do click it, be cheeky
+    noBtn.addEventListener('click', ()=>{
+      moveNoButton();
+      dodgeLevel = clamp(dodgeLevel + 0.4, 1, 6);
+    });
+
+    // YES behavior + fine print gag
+    yesBtn.addEventListener('click', ()=>{
+      const checked = agree.checked;
+      successMsg.textContent = checked
+        ? "You accepted the fine print AND my heart. Iconic. 💞"
+        : "You said yes… without reading the fine print. Even better. 😄💖";
+      success.classList.add('show');
+      confettiBurst();
+      // keep no button from distracting
+      noBtn.style.display = "none";
+    });
+
+    resetBtn.addEventListener('click', ()=>{
+      success.classList.remove('show');
+      noBtn.style.display = "block";
+      dodgeLevel = 1;
+      agree.checked = false;
+      initNoPos();
+    });
+
+    // Keep button positioned relative to arena (absolute coordinates within arena)
+    // Ensure arena is positioning context:
+    arena.style.position = "relative";
+    noBtn.style.position = "absolute";
+  </script>
+</body>
+</html>
+
